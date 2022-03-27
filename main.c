@@ -107,7 +107,7 @@ void menuImportar (List *listaGlobal)
         if (feof(fp)) break; // termina cuando encuentra un EOF
         fgets(linea, 1023, fp);
     }
-    printf("El archivo %s ha sido importado exitosamente\nPresione Enter para continuar", nombreArchivo);
+    printf("El archivo %s ha sido importado exitosamente\nPresione Enter para continuar\n", nombreArchivo);
     getchar(); getchar();
 }
 
@@ -116,6 +116,18 @@ void menuExportar(List *listaGlobal) {
 }
 
 void menuAgregarCancion(List *listaGlobal) {
+    printf("Introduzca la canción que desea agregar utilizando el siguiente formato:\n");
+    printf("\'Título,Artista,\"Género 1, Género 2 ...\",Fecha,N° lista de reproducción\'\n");
+
+    char linea[1024];
+    getchar(); // elimina el buffer
+    scanf("%99[^\n]", linea); // lee todo hasta encontrar un \n
+    Cancion *cancion = leerLineaCSV(linea); // leerLineaCSV lee la linea y retorna un dato tipo Cancion
+
+    pushBack(listaGlobal, cancion);
+    
+    printf("Canción añadida exitosamente.\nPresione Enter para continuar\n");
+    getchar(); getchar();
     return;
 }
 
