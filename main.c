@@ -9,7 +9,6 @@ typedef struct Cancion {
     List *generos;
     char *anno;
     char *numLista;
-    unsigned int numGeneros;
 } Cancion;
 
 typedef struct ListaReproduccion {
@@ -76,14 +75,12 @@ Cancion *leerLineaCSV (char *linea)
 
     cancion->nombre = strtok(linea, ",\"\n");
     cancion->artista = strtok(NULL, ",\"\n"); // guarda la posición de la primera llamada
-    cancion->numGeneros = 0;
 
     char *token = strtok(NULL, ",\"\n");
     while (token != NULL) // mientras queden campos en la línea
     {
         if (token[0] == ' ') token++; // si el primer caracter es un espacio, lo elimina
         pushBack(generos, token);
-        cancion->numGeneros++;
         token = strtok(NULL, ",\"\n"); // géneros, usa " y \n como separador también
     }
     cancion->numLista = popBack(generos); // los 2 últimos elementos de la lista son el año y el n° de su lista
