@@ -124,8 +124,22 @@ void menuAgregarCancion(List *listaGlobal) {
     scanf("%99[^\n]", linea); // lee todo hasta encontrar un \n
     Cancion *cancion = leerLineaCSV(linea); // leerLineaCSV lee la linea y retorna un dato tipo Cancion
 
+    listaGlobal->head;
+    while (nextList(listaGlobal) != NULL)
+    {
+        Cancion * cancionBusqueda = listaGlobal->current->data;
+        if (strcmp(cancionBusqueda->nombre, cancion->nombre))
+        {
+            if (strcmp(cancionBusqueda->artista, cancion->artista))
+            {
+                printf("La canción ya existe en la lista\nPresione Enter para continuar\n");
+                getchar(); getchar();
+                return;
+            }
+        }
+    }
     pushBack(listaGlobal, cancion);
-    
+
     printf("Canción añadida exitosamente.\nPresione Enter para continuar\n");
     getchar(); getchar();
     return;
