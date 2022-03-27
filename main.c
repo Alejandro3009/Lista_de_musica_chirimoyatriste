@@ -4,60 +4,61 @@
 #include "list.c"
 
 typedef struct Cancion {
-    char nombre[20];
-    char artista[20];
-    List generos;
-    char anno[5];
-    char numLista[5];
+    char *nombre;
+    char *artista;
+    List *generos;
+    char *anno;
+    char *numLista;
 } Cancion;
 
 typedef struct ListaReproduccion {
     List canciones;
 } ListaReproduccion;
 
-void menuImportar();
-void menuExportar();
-void menuAgregarCancion();
-void menuBuscarPorNombre();
-void menuBuscarPorArtista();
-void menuBuscarPorGenero();
-void menuEliminarCancion();
-void menuMostrarListas();
-void menuMostrarLista();
-void menuMostrar();
+void menuImportar(List*);
+void menuExportar(List*);
+void menuAgregarCancion(List*);
+void menuBuscarPorNombre(List*);
+void menuBuscarPorArtista(List*);
+void menuBuscarPorGenero(List*);
+void menuEliminarCancion(List*);
+void menuMostrarListas(List*);
+void menuMostrarLista(List*);
+void menuMostrar(List*);
 
 int main()
 {
+    List *listaGlobal = createList();
     unsigned int opcion = 0;
     while (1) {
         printf("| Menu |\n");
         printf("Para elegir una opción introduzca el número correspondiente:\n");
 
-        printf("1. Importar canciones desde un archivo CSV\n");
-        printf("2. Exportar canciones a un archivo CSV\n");
-        printf("3. Agregar canción\n");
-        printf("4. Buscar canción por nombre\n");
-        printf("5. Buscar canción por artista\n");
-        printf("6. Buscar canción por género\n");
-        printf("7. Eliminar canción\n");
-        printf("8. Mostrar listas de reproducción\n");
-        printf("9. Mostrar una lista de reproducción\n");
-        printf("10. Mostrar todas las canciones\n");
-        printf("0. Cerrar\n");
+        printf(" 1. Importar canciones desde un archivo CSV\n");
+        printf(" 2. Exportar canciones a un archivo CSV\n");
+        printf(" 3. Agregar canción\n");
+        printf(" 4. Buscar canción por nombre\n");
+        printf(" 5. Buscar canción por artista\n");
+        printf(" 6. Buscar canción por género\n");
+        printf(" 7. Eliminar canción\n");
+        printf(" 8. Mostrar listas de reproducción\n");
+        printf(" 9. Mostrar una lista de reproducción\n");
+        printf(" 10. Mostrar todas las canciones\n");
+        printf(" 0. Cerrar\n");
 
-        scanf("%u", &opcion);
+        scanf(" %u", &opcion);
 
         if (opcion == 0) break;
-        if (opcion == 1) menuImportar(); // manejoCSV.c
-        if (opcion == 2) menuExportar(); // manejoCSV.c
-        if (opcion == 3) menuAgregarCancion(); // manejoCanciones.c
-        if (opcion == 4) menuBuscarPorNombre(); //buscar.c
-        if (opcion == 5) menuBuscarPorArtista(); //buscar.c
-        if (opcion == 6) menuBuscarPorGenero(); //buscar.c
-        if (opcion == 7) menuEliminarCancion(); // manejoCanciones.c
-        if (opcion == 8) menuMostrarListas(); // main.c
-        if (opcion == 9) menuMostrarLista(); // main.c
-        if (opcion == 10) menuMostrar(); // main.c
+        if (opcion == 1) menuImportar(listaGlobal); // manejoCSV.c
+        if (opcion == 2) menuExportar(listaGlobal); // manejoCSV.c
+        if (opcion == 3) menuAgregarCancion(listaGlobal); // manejoCanciones.c
+        if (opcion == 4) menuBuscarPorNombre(listaGlobal); //buscar.c
+        if (opcion == 5) menuBuscarPorArtista(listaGlobal); //buscar.c
+        if (opcion == 6) menuBuscarPorGenero(listaGlobal); //buscar.c
+        if (opcion == 7) menuEliminarCancion(listaGlobal); // manejoCanciones.c
+        if (opcion == 8) menuMostrarListas(listaGlobal); // main.c
+        if (opcion == 9) menuMostrarLista(listaGlobal); // main.c
+        if (opcion == 10) menuMostrar(listaGlobal); // main.c
         if (opcion > 10){
             printf("Por favor introduzca un número entre 0 y 10\n");
         }
@@ -65,117 +66,78 @@ int main()
     return 0;
 }
 
-// falta caso géneros
-const char *get_csv_field (char * tmp, int k) {
-    int open_mark = 0;
-    char* ret=(char*) malloc (100*sizeof(char));
-    int ini_i=0, i=0;
-    int j=0;
-    while(tmp[i+1]!='\0'){
-
-        if(tmp[i]== '\"'){
-            open_mark = 1-open_mark;
-            if(open_mark) ini_i = i+1;
-            i++;
-            continue;
-        }
-
-        if(open_mark || tmp[i]!= ','){
-            if(k==j) ret[i-ini_i] = tmp[i];
-            i++;
-            continue;
-        }
-
-        if(tmp[i]== ','){
-            if(k==j) {
-               ret[i-ini_i] = 0;
-               return ret;
-            }
-            j++; ini_i = i+1;
-        }
-
-        i++;
-    }
-
-    if(k==j) {
-       ret[i-ini_i] = 0;
-       return ret;
-    }
-
-
-    return NULL;
-}
-
-List crearListaGeneros() {
-
-}
-
-void menuImportar ()
+void menuImportar (List *listaGlobal)
 {
-    char nombreArchivo[20];
-    List *listaCanciones = createList();
+    char nombreArchivo[24];
 
     printf("Introduzca el nombre del archivo CSV:\n");
     scanf("%s", &nombreArchivo);
 
     FILE *fp = fopen(nombreArchivo, "r");
-    char linea[1024] = "inicio";
-    char *campo;
+    char linea[1024];
 
-
-    fgets (linea, 1023, fp);
+    fgets(linea, 1023, fp);
     while (linea)
     {
-        Cancion *cancion;
+        Cancion *cancion = (Cancion*) malloc (sizeof(Cancion));
+        List *generos = createList();
 
-        // 0 = nombre, 1 = artista, 2 = generos, 3 = año, 4 = num lista
-        strcpy(cancion->nombre, get_csv_field(linea, 0));
-        strcpy(cancion->artista, get_csv_field(linea, 1));
-        cancion->generos = crearListaGeneros(get_csv_field(linea, 2));//strcpy(cancion->nombre, get_csv_field(linea, 0));
-        strcpy(cancion->anno, get_csv_field(linea, 3));
-        strcpy(cancion->numLista, get_csv_field(linea, 4));
-        
-        pushBack(listaCanciones, cancion);
+        // la función strtok separa la linea en strings más pequeños (tokens)
 
-        fgets (linea, 1023, fp);
+        cancion->nombre = strtok(linea, ",\"\n");
+        cancion->artista = strtok(NULL, ",\"\n"); // guarda la posición de la primera llamada
+
+        char *token = strtok(NULL, ",\"\n");
+        while (token != NULL) // mientras queden campos en la línea
+        {
+            if (token[0] == ' ') token++; // si el primer caracter es un espacio, lo elimina
+            pushBack(generos, token);
+            token = strtok(NULL, ",\"\n"); // géneros, usa " y \n como separador también
+        }
+        cancion->numLista = popBack(generos); // los 2 últimos elementos de la lista son el año y el n° de su lista
+
+        cancion->anno = popBack(generos);
+
+        pushBack(listaGlobal, cancion);
+        if (feof(fp)) break; // termina cuando encuentra un EOF
+        fgets(linea, 1023, fp);
     }
-    
-
-
+    printf("El archivo %s ha sido importado exitosamente\nPresione Enter para continuar", nombreArchivo);
+    getchar(); getchar();
 }
 
-void menuExportar() {
+void menuExportar(List *listaGlobal) {
     return;
 }
 
-void menuAgregarCancion() {
+void menuAgregarCancion(List *listaGlobal) {
     return;
 }
 
-void menuBuscarPorNombre() {
+void menuBuscarPorNombre(List *listaGlobal) {
     return;
 }
 
-void menuBuscarPorArtista() {
+void menuBuscarPorArtista(List *listaGlobal) {
     return;
 }
 
-void menuBuscarPorGenero() {
+void menuBuscarPorGenero(List *listaGlobal) {
     return;
 }
 
-void menuEliminarCancion() {
+void menuEliminarCancion(List *listaGlobal) {
     return;
 }
 
-void menuMostrarListas() {
+void menuMostrarListas(List *listaGlobal) {
     return;
 }
 
-void menuMostrarLista() {
+void menuMostrarLista(List *listaGlobal) {
     return;
 }
 
-void menuMostrar() {
+void menuMostrar(List *listaGlobal) {
     return;
 }
