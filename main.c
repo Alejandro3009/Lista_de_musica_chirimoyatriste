@@ -66,6 +66,28 @@ int main()
     return 0;
 }
 
+Cancion *leerLineaCSV (char *linea)
+{
+    Cancion *cancion = (Cancion*) malloc (sizeof(Cancion));
+    List *generos = createList();
+
+    // la función strtok separa la linea en strings más pequeños (tokens)
+
+    cancion->nombre = strtok(linea, ",\"\n");
+    cancion->artista = strtok(NULL, ",\"\n"); // guarda la posición de la primera llamada
+
+    char *token = strtok(NULL, ",\"\n");
+    while (token != NULL) // mientras queden campos en la línea
+    {
+        if (token[0] == ' ') token++; // si el primer caracter es un espacio, lo elimina
+        pushBack(generos, token);
+        token = strtok(NULL, ",\"\n"); // géneros, usa " y \n como separador también
+    }
+    cancion->numLista = popBack(generos); // los 2 últimos elementos de la lista son el año y el n° de su lista
+
+    cancion->anno = popBack(generos);
+}
+
 void menuImportar (List *listaGlobal)
 {
     char nombreArchivo[24];
@@ -79,24 +101,7 @@ void menuImportar (List *listaGlobal)
     fgets(linea, 1023, fp);
     while (linea)
     {
-        Cancion *cancion = (Cancion*) malloc (sizeof(Cancion));
-        List *generos = createList();
-
-        // la función strtok separa la linea en strings más pequeños (tokens)
-
-        cancion->nombre = strtok(linea, ",\"\n");
-        cancion->artista = strtok(NULL, ",\"\n"); // guarda la posición de la primera llamada
-
-        char *token = strtok(NULL, ",\"\n");
-        while (token != NULL) // mientras queden campos en la línea
-        {
-            if (token[0] == ' ') token++; // si el primer caracter es un espacio, lo elimina
-            pushBack(generos, token);
-            token = strtok(NULL, ",\"\n"); // géneros, usa " y \n como separador también
-        }
-        cancion->numLista = popBack(generos); // los 2 últimos elementos de la lista son el año y el n° de su lista
-
-        cancion->anno = popBack(generos);
+        Cancion *cancion = leerLineaCSV(linea);
 
         pushBack(listaGlobal, cancion);
         if (feof(fp)) break; // termina cuando encuentra un EOF
