@@ -128,6 +128,7 @@ void menuImportar (List *listaGlobal)
 }
 
 void menuExportar(List *listaGlobal) {
+    
     return;
 }
 
@@ -140,19 +141,19 @@ void menuAgregarCancion(List *listaGlobal) {
     scanf("%99[^\n]", linea); // lee todo hasta encontrar un \n
     Cancion *cancion = leerLinea(linea); // leerLinea lee la linea y retorna un dato tipo Cancion
 
-    firstList(listaGlobal);
-    while (nextList(listaGlobal) != NULL)
+    Cancion* C = firstList(listaGlobal);
+    while (C != NULL)
     {
-        Cancion * cancionBusqueda = listaGlobal->current->data;
-        if (strcmp(cancionBusqueda->nombre, cancion->nombre))
+        if (strcmp(C->nombre, cancion->nombre))
         {
-            if (strcmp(cancionBusqueda->artista, cancion->artista) == 0)
+            if (strcmp(C->artista, cancion->artista) == 0)
             {
                 printf("La canción ya existe en la lista\nPresione Enter para continuar\n");
                 getchar(); getchar();
                 return;
             }
         }
+        C = nextList(listaGlobal);
     }
     pushBack(listaGlobal, cancion);
 
