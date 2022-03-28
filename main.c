@@ -124,12 +124,24 @@ void menuImportar (List *listaGlobal)
         fgets(linea, 1023, fp);
     }
     printf("El archivo %s ha sido importado exitosamente\nPresione Enter para continuar\n", nombreArchivo);
+    fclose(nombreArchivo);
     getchar(); getchar();
 }
 
 void menuExportar(List *listaGlobal) {
+    char nombreArchivo[64];
+
+    printf("Escriba el nombre del archivo a exportar");
+    scanf("%s",&nombreArchivo);
+
+    FILE *fp = fopen(nombreArchivo,"w");
     
-    return;
+    while(feof(fp)){
+        fgets(fp,1023,listaGlobal);
+        nextList(listaGlobal);
+    }
+
+    //return;
 }
 
 void menuAgregarCancion(List *listaGlobal) {
@@ -183,7 +195,7 @@ void menuBuscarPorNombre(List *listaGlobal) {
     }
 
      if(!existe){
-        printf("No se ha encontrado una cancion con el nombre: %s", busqueda);
+        printf("No se ha encontrado una cancion con el nombre: %s\n\n", busqueda);
     }
 
     printf("Presione Enter para continuar\n");
@@ -212,7 +224,7 @@ void menuBuscarPorArtista(List *listaGlobal) {
     }
 
     if(!existe){
-        printf("No se ha encontrado el artista: %s",busqueda);
+        printf("No se ha encontrado el artista: %s\n",busqueda);
     }
 
     printf("Fin de búsqueda\nPresione Enter para continuar\n");
@@ -246,7 +258,7 @@ void menuBuscarPorGenero(List *listaGlobal) {
     }
 
     if(!existe){
-        printf("No se ha encontrado el genero: %s",busqueda);
+        printf("No se ha encontrado el genero: %s\n",busqueda);
     }
 
     printf("Presione Enter para continuar\n");
@@ -259,7 +271,7 @@ void menuEliminarCancion(List *listaGlobal) {
     Cancion* cancion;
 
     
-    printf("Ingrese nombre y artista de la cancion a eliminar");
+    printf("Ingrese nombre y artista de la cancion a eliminar: ");
     getchar();
     scanf("%99[^\n] %99[^\n]",busqueda1,busqueda2);
 
@@ -268,13 +280,15 @@ void menuEliminarCancion(List *listaGlobal) {
     while(cancion != NULL){
         if(strcmp(cancion->nombre,busqueda1) == 0 && strcmp(cancion->artista,busqueda2) == 0){
             popCurrent(listaGlobal);
+            printf("Cancion eliminada con exito\n");
+            printf("Presione Enter para continuar\n");
+            getchar(); getchar();
             break;
         }
         else{
             cancion = nextList(listaGlobal);
         }
     }
-    printf("Cancion eliminada con exito");
     return;
 }
 
