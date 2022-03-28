@@ -24,7 +24,7 @@ void menuMostrarCanciones(List*);
 
 int main()
 {
-    List *listaGlobal = createList();
+    List *listaGlobal = createList(); // lista que guarda todas las canciones
     unsigned int opcion = 0;
     while (1) {
         printf("| Menu |\n");
@@ -45,16 +45,16 @@ int main()
         scanf(" %u", &opcion);
 
         if (opcion == 0) break;
-        if (opcion == 1) menuImportar(listaGlobal); // manejoCSV.c
-        if (opcion == 2) menuExportar(listaGlobal); // manejoCSV.c
-        if (opcion == 3) menuAgregarCancion(listaGlobal); // manejoCanciones.c
-        if (opcion == 4) menuBuscarPorNombre(listaGlobal); //buscar.c
-        if (opcion == 5) menuBuscarPorArtista(listaGlobal); //buscar.c
-        if (opcion == 6) menuBuscarPorGenero(listaGlobal); //buscar.c
-        if (opcion == 7) menuEliminarCancion(listaGlobal); // manejoCanciones.c
-        if (opcion == 8) menuMostrarListas(listaGlobal); // main.c
-        if (opcion == 9) menuMostrarLista(listaGlobal); // main.c
-        if (opcion == 10) menuMostrarCanciones(listaGlobal); // main.c
+        if (opcion == 1) menuImportar(listaGlobal);
+        if (opcion == 2) menuExportar(listaGlobal);
+        if (opcion == 3) menuAgregarCancion(listaGlobal);
+        if (opcion == 4) menuBuscarPorNombre(listaGlobal);
+        if (opcion == 5) menuBuscarPorArtista(listaGlobal);
+        if (opcion == 6) menuBuscarPorGenero(listaGlobal);
+        if (opcion == 7) menuEliminarCancion(listaGlobal);
+        if (opcion == 8) menuMostrarListas(listaGlobal);
+        if (opcion == 9) menuMostrarLista(listaGlobal);
+        if (opcion == 10) menuMostrarCanciones(listaGlobal);
         if (opcion > 10){
             printf("Por favor introduzca un número entre 0 y 10\n");
         }
@@ -169,7 +169,7 @@ void menuBuscarPorNombre(List *listaGlobal) {
 
     scanf("%99[^\n]", busqueda);
     cancion = firstList(listaGlobal);
-    while(cancion != NULL){
+    while(cancion != NULL){ // recorre la lista comparando el nombre de la canción actual con el string busqueda
         if(strcmp(cancion->nombre,busqueda) == 0){
             printf("Canción encontrada\n");
             printCancion(cancion);
