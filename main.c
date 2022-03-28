@@ -229,6 +229,24 @@ void menuBuscarPorGenero(List *listaGlobal) {
 }
 
 void menuEliminarCancion(List *listaGlobal) {
+    char busqueda[64];
+    Cancion* cancion;
+
+    printf("Ingrese el nombre de la canción a buscar: ");
+    getchar();
+
+    scanf("%99[^\n]", busqueda);
+    cancion = firstList(listaGlobal);
+    while(cancion != NULL){
+        if(strcmp(cancion->nombre,busqueda) == 0){
+            popCurrent(listaGlobal);
+            printf("Canción eliminada\n");
+            break;
+        }
+        cancion = nextList(listaGlobal);
+    }
+    printf("Presione Enter para continuar\n");
+    getchar(); getchar();
     return;
 }
 
