@@ -24,7 +24,7 @@ void menuBuscarPorGenero(List*);
 void menuEliminarCancion(List*);
 void menuMostrarListas(List*);
 void menuMostrarLista(List*);
-void menuMostrar(List*);
+void menuMostrarCanciones(List*);
 
 int main()
 {
@@ -58,7 +58,7 @@ int main()
         if (opcion == 7) menuEliminarCancion(listaGlobal); // manejoCanciones.c
         if (opcion == 8) menuMostrarListas(listaGlobal); // main.c
         if (opcion == 9) menuMostrarLista(listaGlobal); // main.c
-        if (opcion == 10) menuMostrar(listaGlobal); // main.c
+        if (opcion == 10) menuMostrarCanciones(listaGlobal); // main.c
         if (opcion > 10){
             printf("Por favor introduzca un número entre 0 y 10\n");
         }
@@ -244,6 +244,6 @@ void menuMostrarLista(List *listaGlobal) {
     return;
 }
 
-void menuMostrar(List *listaGlobal) {
+void menuMostrarCanciones(List *listaGlobal) {
     return;
 }
