@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "list.c"
+#include <stdbool.h>
 
 typedef struct Cancion {
     char *nombre;
@@ -167,6 +168,7 @@ void menuAgregarCancion(List *listaGlobal) {
 void menuBuscarPorNombre(List *listaGlobal) {
     char busqueda[64];
     Cancion* cancion;
+    bool existe = false;
 
     printf("Ingrese el nombre de la canción a buscar: ");
     getchar();
@@ -175,20 +177,29 @@ void menuBuscarPorNombre(List *listaGlobal) {
     cancion = firstList(listaGlobal);
     while(cancion != NULL){
         if(strcmp(cancion->nombre,busqueda) == 0){
+            existe = true;
             printf("Canción encontrada\n");
             printCancion(cancion);
             break;
         }
         cancion = nextList(listaGlobal);
     }
+
+     if(!existe){
+        printf("No se ha encontrado una cancion con el nombre: %s", busqueda);
+    }
+
     printf("Presione Enter para continuar\n");
     getchar(); getchar();
     return;
+
+   
 }
 
 void menuBuscarPorArtista(List *listaGlobal) {
     char busqueda[64];
     Cancion* cancion;
+    bool existe = false;
 
     printf("Ingrese el artista de la canción a buscar: ");
     getchar();
@@ -197,10 +208,16 @@ void menuBuscarPorArtista(List *listaGlobal) {
     cancion = firstList(listaGlobal);
     while(cancion != NULL){
         if(strcmp(cancion->artista,busqueda) == 0){
+            existe = true;
             printCancion(cancion);
         }
         cancion = nextList(listaGlobal);
     }
+
+    if(!existe){
+        printf("No se ha encontrado el artista: %s",busqueda);
+    }
+
     printf("Fin de búsqueda\nPresione Enter para continuar\n");
     getchar(); getchar();
     return;
@@ -210,6 +227,7 @@ void menuBuscarPorArtista(List *listaGlobal) {
 void menuBuscarPorGenero(List *listaGlobal) {
     char busqueda[64];
     Cancion* cancion;
+    bool existe = false;
 
     printf("Ingrese el género por buscar: ");
     getchar();
@@ -221,6 +239,7 @@ void menuBuscarPorGenero(List *listaGlobal) {
         char *genero = firstList(cancion->generos);
         while(genero != NULL){
             if(strcmp(genero,busqueda) == 0){
+                existe = true;
                 printCancion(cancion);
                 break;
             }
@@ -228,15 +247,42 @@ void menuBuscarPorGenero(List *listaGlobal) {
         }
         cancion = nextList(listaGlobal);
     }
+
+    if(!existe){
+        printf("No se ha encontrado el genero: %s",busqueda);
+    }
+
     printf("Presione Enter para continuar\n");
     getchar(); getchar();
 }
 
 void menuEliminarCancion(List *listaGlobal) {
+    char busqueda1[64];
+    char busqueda2[64];
+    Cancion* cancion;
+
+    
+    printf("Ingrese nombre y artista de la cancion a eliminar");
+    getchar();
+    scanf("%99[^\n] %99[^\n]",busqueda1,busqueda2);
+
+    cancion = firstList(listaGlobal);
+
+    while(cancion != NULL){
+        if(strcmp(cancion->nombre,busqueda1) == 0 && strcmp(cancion->artista,busqueda2) == 0){
+            popCurrent(listaGlobal);
+            break;
+        }
+        else{
+            cancion = nextList(listaGlobal);
+        }
+    }
+    printf("Cancion eliminada con exito");
     return;
 }
 
 void menuMostrarListas(List *listaGlobal) {
+    
     return;
 }
 
