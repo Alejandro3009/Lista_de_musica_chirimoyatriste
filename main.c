@@ -66,15 +66,31 @@ int main()
     return 0;
 }
 
+void printCancion(Cancion *cancion)
+{
+    printf("%s, %s, \"",cancion->nombre,cancion->artista);
+    firstList(cancion->generos);
+    while (cancion->generos->current != NULL){
+        printf("%s",cancion->generos->current->data);
+        if (cancion->generos->current->next == NULL) break;
+        printf(" ");
+        nextList(cancion->generos);
+    }
+    printf("\", %s, %s\n", cancion->anno,cancion->numLista);
+    return;
+}
+
 Cancion *leerLineaCSV (char *linea)
 {
     Cancion *cancion = (Cancion*) malloc (sizeof(Cancion));
     List *generos = createList();
 
+    char *lineaNueva = (char *)malloc(sizeof(char)*1024); // guarda la linea en el heap
+    strcpy(lineaNueva, linea);
+    
     // la función strtok separa la linea en strings más pequeños (tokens)
-
-    cancion->nombre = strtok(linea, ",\"\n");
-    cancion->artista = strtok(NULL, ",\"\n"); // guarda la posición de la primera llamada
+    cancion->nombre = strtok(lineaNueva, ",\"\n");
+    cancion->artista = strtok(NULL, ",\"\n"); // la posición de la primera llamada está guardada
 
     char *token = strtok(NULL, ",\"\n");
     while (token != NULL) // mientras queden campos en la línea
@@ -83,9 +99,12 @@ Cancion *leerLineaCSV (char *linea)
         pushBack(generos, token);
         token = strtok(NULL, ",\"\n"); // géneros, usa " y \n como separador también
     }
+    cancion->generos = generos;
+
     cancion->numLista = popBack(generos); // los 2 últimos elementos de la lista son el año y el n° de su lista
 
     cancion->anno = popBack(generos);
+    return cancion;
 }
 
 void menuImportar (List *listaGlobal)
@@ -124,13 +143,13 @@ void menuAgregarCancion(List *listaGlobal) {
     scanf("%99[^\n]", linea); // lee todo hasta encontrar un \n
     Cancion *cancion = leerLineaCSV(linea); // leerLineaCSV lee la linea y retorna un dato tipo Cancion
 
-    listaGlobal->head;
+    firstList(listaGlobal);
     while (nextList(listaGlobal) != NULL)
     {
         Cancion * cancionBusqueda = listaGlobal->current->data;
         if (strcmp(cancionBusqueda->nombre, cancion->nombre))
         {
-            if (strcmp(cancionBusqueda->artista, cancion->artista))
+            if (strcmp(cancionBusqueda->artista, cancion->artista) == 0)
             {
                 printf("La canción ya existe en la lista\nPresione Enter para continuar\n");
                 getchar(); getchar();
@@ -146,15 +165,71 @@ void menuAgregarCancion(List *listaGlobal) {
 }
 
 void menuBuscarPorNombre(List *listaGlobal) {
+    char busqueda[64];
+    Cancion* cancion;
+
+    printf("Ingrese el nombre de la canción a buscar: ");
+    getchar();
+
+    scanf("%99[^\n]", busqueda);
+    cancion = firstList(listaGlobal);
+    while(cancion != NULL){
+        if(strcmp(cancion->nombre,busqueda) == 0){
+            printf("Canción encontrada\n");
+            printCancion(cancion);
+            break;
+        }
+        cancion = nextList(listaGlobal);
+    }
+    printf("Presione Enter para continuar\n");
+    getchar(); getchar();
     return;
 }
 
 void menuBuscarPorArtista(List *listaGlobal) {
+    char busqueda[64];
+    Cancion* cancion;
+
+    printf("Ingrese el artista de la canción a buscar: ");
+    getchar();
+
+    scanf("%99[^\n]", busqueda);
+    cancion = firstList(listaGlobal);
+    while(cancion != NULL){
+        if(strcmp(cancion->artista,busqueda) == 0){
+            printCancion(cancion);
+        }
+        cancion = nextList(listaGlobal);
+    }
+    printf("Fin de búsqueda\nPresione Enter para continuar\n");
+    getchar(); getchar();
     return;
 }
 
+
 void menuBuscarPorGenero(List *listaGlobal) {
-    return;
+    char busqueda[64];
+    Cancion* cancion;
+
+    printf("Ingrese el género por buscar: ");
+    getchar();
+
+    scanf("%99[^\n]", busqueda);
+    cancion = firstList(listaGlobal);
+
+    while(cancion != NULL){
+        char *genero = firstList(cancion->generos);
+        while(genero != NULL){
+            if(strcmp(genero,busqueda) == 0){
+                printCancion(cancion);
+                break;
+            }
+            genero = nextList(cancion->generos);
+        }
+        cancion = nextList(listaGlobal);
+    }
+    printf("Presione Enter para continuar\n");
+    getchar(); getchar();
 }
 
 void menuEliminarCancion(List *listaGlobal) {
