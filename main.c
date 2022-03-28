@@ -80,7 +80,7 @@ void printCancion(Cancion *cancion)
     return;
 }
 
-Cancion *leerLineaCSV (char *linea)
+Cancion *leerLinea (char *linea)
 {
     Cancion *cancion = (Cancion*) malloc (sizeof(Cancion));
     List *generos = createList();
@@ -120,7 +120,7 @@ void menuImportar (List *listaGlobal)
     fgets(linea, 1023, fp);
     while (linea)
     {
-        Cancion *cancion = leerLineaCSV(linea);
+        Cancion *cancion = leerLinea(linea);
 
         pushBack(listaGlobal, cancion);
         if (feof(fp)) break; // termina cuando encuentra un EOF
@@ -141,7 +141,7 @@ void menuAgregarCancion(List *listaGlobal) {
     char linea[1024];
     getchar(); // elimina el buffer
     scanf("%99[^\n]", linea); // lee todo hasta encontrar un \n
-    Cancion *cancion = leerLineaCSV(linea); // leerLineaCSV lee la linea y retorna un dato tipo Cancion
+    Cancion *cancion = leerLinea(linea); // leerLinea lee la linea y retorna un dato tipo Cancion
 
     firstList(listaGlobal);
     while (nextList(listaGlobal) != NULL)
