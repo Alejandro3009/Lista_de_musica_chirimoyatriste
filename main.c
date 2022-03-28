@@ -11,10 +11,6 @@ typedef struct Cancion {
     char *numLista;
 } Cancion;
 
-typedef struct ListaReproduccion {
-    List canciones;
-} ListaReproduccion;
-
 void menuImportar(List*);
 void menuExportar(List*);
 void menuAgregarCancion(List*);
