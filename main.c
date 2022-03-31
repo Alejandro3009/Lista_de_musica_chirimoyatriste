@@ -327,7 +327,6 @@ void menuMostrarListas(List *listaGlobal) {
     tipoArreglo *arreglo;
     int i;
     int tamano = 0;
-    printf("A");
     Cancion *c = firstList(listaGlobal);
     bool mismoNombre = false;
 
