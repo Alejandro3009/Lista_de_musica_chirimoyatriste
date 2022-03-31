@@ -135,7 +135,7 @@ void menuImportar (List *listaGlobal)
         fgets(linea, 1023, fp);
     }
     printf("El archivo %s ha sido importado exitosamente\nPresione Enter para continuar\n", nombreArchivo);
-    fclose(nombreArchivo);
+    fclose(fp);
     getchar(); getchar();
 }
 
@@ -146,13 +146,30 @@ void menuExportar(List *listaGlobal) {
     scanf("%s",&nombreArchivo);
 
     FILE *fp = fopen(nombreArchivo,"w");
-    
-    while(feof(fp)){
-        fgets(fp,1023,listaGlobal);
-        nextList(listaGlobal);
+    Cancion *cancion = firstList(listaGlobal);
+    while(1){
+        fputs(cancion->nombre, fp);
+        fputs(",", fp);
+        fputs(cancion->artista, fp);
+        fputs(",\"", fp);
+
+        char *genero = firstList(cancion->generos);
+        while (genero != NULL)
+        {
+            fgets(genero);
+            genero = nextList(cancion->generos);
+        }
+        fputs("\",", fp);
+        fputs(cancion->anno, fp);
+        fputs(",", fp);
+        fputs(cancion->numLista, fp);
+        cancion = nextList(listaGlobal);
+
+        if (cancion == NULL) break;
+        fputs("\n", fp);
     }
 
-    //return;
+    return;
 }
 
 void menuAgregarCancion(List *listaGlobal) {
