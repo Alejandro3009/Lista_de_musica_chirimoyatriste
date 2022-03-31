@@ -11,24 +11,30 @@ typedef struct Cancion {
     char *numLista;
 } Cancion;
 
-typedef struct ListaReproduccion {
-    List canciones;
-} ListaReproduccion;
+typedef struct ListaGlobal {
+    List *lista; // lista global de canciones
+    List *nombreListas; // lista con nombres de listas
+} ListaGlobal;
 
-void menuImportar(List*);
-void menuExportar(List*);
-void menuAgregarCancion(List*);
-void menuBuscarPorNombre(List*);
-void menuBuscarPorArtista(List*);
-void menuBuscarPorGenero(List*);
-void menuEliminarCancion(List*);
-void menuMostrarListas(List*);
-void menuMostrarLista(List*);
-void menuMostrar(List*);
+void menuImportar(ListaGlobal*);
+void menuExportar(ListaGlobal*);
+void menuAgregarCancion(ListaGlobal*);
+void menuBuscarPorNombre(ListaGlobal*);
+void menuBuscarPorArtista(ListaGlobal*);
+void menuBuscarPorGenero(ListaGlobal*);
+void menuEliminarCancion(ListaGlobal*);
+void menuMostrarListas(ListaGlobal*);
+void menuMostrarLista(ListaGlobal*);
+void menuMostrarCanciones(ListaGlobal*);
 
 int main()
 {
-    List *listaGlobal = createList();
+    ListaGlobal * listaGlobal = (ListaGlobal*)malloc(sizeof(ListaGlobal));
+    List *lista = createList(); // lista que guarda todas las canciones
+    List *listaNombres = createList();
+    listaGlobal->lista = lista;
+    listaGlobal->nombreListas = listaNombres;
+
     unsigned int opcion = 0;
     while (1) {
         printf("| Menu |\n");
@@ -80,7 +86,26 @@ void printCancion(Cancion *cancion)
     return;
 }
 
-Cancion *leerLineaCSV (char *linea)
+void leerNombreLista(ListaGlobal *listaGlobal, Cancion *cancion)
+{
+    char *nombre = firstList(listaGlobal->nombreListas);
+    char *nombreListaCancion = cancion->numLista;
+    int existe = 0;
+    while (nombre != NULL)
+    {
+        if (strcmp(nombre, nombreListaCancion) == 0)
+        {
+            existe = 1;
+        }
+    }
+    if (existe)
+    {
+
+    }
+    return;
+}
+
+Cancion *leerLinea (char *linea)
 {
     Cancion *cancion = (Cancion*) malloc (sizeof(Cancion));
     List *generos = createList();
@@ -107,7 +132,7 @@ Cancion *leerLineaCSV (char *linea)
     return cancion;
 }
 
-void menuImportar (List *listaGlobal)
+void menuImportar (ListaGlobal *listaGlobal)
 {
     char nombreArchivo[24];
 
@@ -122,7 +147,8 @@ void menuImportar (List *listaGlobal)
     {
         Cancion *cancion = leerLineaCSV(linea);
 
-        pushBack(listaGlobal, cancion);
+        pushBack(listaGlobal->lista, cancion);
+        leerNombreLista(listaGlobal, cancion);
         if (feof(fp)) break; // termina cuando encuentra un EOF
         fgets(linea, 1023, fp);
     }
@@ -130,11 +156,12 @@ void menuImportar (List *listaGlobal)
     getchar(); getchar();
 }
 
-void menuExportar(List *listaGlobal) {
+void menuExportar(ListaGlobal *listaGlobal) {
+    
     return;
 }
 
-void menuAgregarCancion(List *listaGlobal) {
+void menuAgregarCancion(ListaGlobal *listaGlobal) {
     printf("Introduzca la canción que desea agregar utilizando el siguiente formato:\n");
     printf("\'Título,Artista,\"Género 1, Género 2 ...\",Fecha,N° lista de reproducción\'\n");
 
@@ -143,10 +170,9 @@ void menuAgregarCancion(List *listaGlobal) {
     scanf("%99[^\n]", linea); // lee todo hasta encontrar un \n
     Cancion *cancion = leerLineaCSV(linea); // leerLineaCSV lee la linea y retorna un dato tipo Cancion
 
-    firstList(listaGlobal);
+    Cancion * cancionBusqueda = firstList(listaGlobal);
     while (nextList(listaGlobal) != NULL)
     {
-        Cancion * cancionBusqueda = listaGlobal->current->data;
         if (strcmp(cancionBusqueda->nombre, cancion->nombre))
         {
             if (strcmp(cancionBusqueda->artista, cancion->artista) == 0)
@@ -156,6 +182,7 @@ void menuAgregarCancion(List *listaGlobal) {
                 return;
             }
         }
+        cancionBusqueda = nextList(listaGlobal);
     }
     pushBack(listaGlobal, cancion);
 
@@ -164,7 +191,7 @@ void menuAgregarCancion(List *listaGlobal) {
     return;
 }
 
-void menuBuscarPorNombre(List *listaGlobal) {
+void menuBuscarPorNombre(ListaGlobal *listaGlobal) {
     char busqueda[64];
     Cancion* cancion;
 
@@ -186,7 +213,7 @@ void menuBuscarPorNombre(List *listaGlobal) {
     return;
 }
 
-void menuBuscarPorArtista(List *listaGlobal) {
+void menuBuscarPorArtista(ListaGlobal *listaGlobal) {
     char busqueda[64];
     Cancion* cancion;
 
@@ -207,7 +234,7 @@ void menuBuscarPorArtista(List *listaGlobal) {
 }
 
 
-void menuBuscarPorGenero(List *listaGlobal) {
+void menuBuscarPorGenero(ListaGlobal *listaGlobal) {
     char busqueda[64];
     Cancion* cancion;
 
@@ -232,18 +259,40 @@ void menuBuscarPorGenero(List *listaGlobal) {
     getchar(); getchar();
 }
 
-void menuEliminarCancion(List *listaGlobal) {
+void menuEliminarCancion(ListaGlobal *listaGlobal) {
+    char busqueda1[64];
+    char busqueda2[64];
+    Cancion* cancion;
+
+    
+    printf("Ingrese nombre y artista de la cancion a eliminar");
+    getchar();
+    scanf("%99[^\n] %99[^\n]",busqueda1,busqueda2);
+
+    cancion = firstList(listaGlobal);
+
+    while(cancion != NULL){
+        if(strcmp(cancion->nombre,busqueda1) == 0 && strcmp(cancion->artista,busqueda2) == 0){
+            popCurrent(listaGlobal);
+            break;
+        }
+        else{
+            cancion = nextList(listaGlobal);
+        }
+    }
+    printf("Cancion eliminada con exito");
     return;
 }
 
-void menuMostrarListas(List *listaGlobal) {
+void menuMostrarListas(ListaGlobal *listaGlobal) {
+    
     return;
 }
 
-void menuMostrarLista(List *listaGlobal) {
+void menuMostrarLista(ListaGlobal *listaGlobal) {
     return;
 }
 
-void menuMostrar(List *listaGlobal) {
+void menuMostrarCanciones(ListaGlobal *listaGlobal) {
     return;
 }
