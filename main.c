@@ -156,7 +156,7 @@ void menuExportar(List *listaGlobal) {
         char *genero = firstList(cancion->generos);
         while (genero != NULL)
         {
-            //fgets(genero);
+            fgets(genero);
             genero = nextList(cancion->generos);
         }
         fputs("\",", fp);
@@ -362,7 +362,6 @@ void menuMostrarLista(List *listaGlobal) {
     Cancion *c;
     bool listFound = false;
 
-    getchar();
     scanf("%s",&nomIngresado);
     c = firstList(listaGlobal);
 
@@ -391,12 +390,10 @@ void menuMostrarLista(List *listaGlobal) {
 
 void menuMostrarCanciones(List *listaGlobal) {
     Cancion *cancionzasa = firstList(listaGlobal);
-    while (cancionzasa)
+    while (listaGlobal->current != NULL)
     {
         printCancion(cancionzasa);
         cancionzasa = nextList(listaGlobal);
     }
-    printf("Presione Enter para continuar\n");
-    getchar(); getchar();
     return;
 }
