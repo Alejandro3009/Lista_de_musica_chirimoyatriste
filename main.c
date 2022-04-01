@@ -340,20 +340,20 @@ void menuMostrarListas(List *listaGlobal) {
     {
         for(i=0; i < tamano; i++)
         {
-            if(strcmp(c->numLista,arreglo->nombre))
+            if(!strcmp(c->numLista,arreglo[i].nombre))
             {
                 mismoNombre = true;
                 break;
             }
         }
 
-        if(mismoNombre)arreglo->cantidad++;
+        if(mismoNombre)arreglo[i].cantidad++;
         else
         {
             tamano++;
-            aumentarMemoria(arreglo,tamano);
-            arreglo->nombre = c->numLista;
-            arreglo->cantidad = 1;
+            arreglo = aumentarMemoria(arreglo,tamano);
+            arreglo[tamano-1].nombre = c->numLista;
+            arreglo[tamano-1].cantidad = 1;
         }
         c = nextList(listaGlobal);
         mismoNombre = false;
@@ -361,8 +361,8 @@ void menuMostrarListas(List *listaGlobal) {
 
     for(i=0; i<tamano; i++)
     {
-        puts(arreglo->nombre);
-        printf("%i\n\n",arreglo->cantidad);
+        puts(arreglo[i].nombre);
+        printf("%i\n\n",arreglo[i].cantidad);
     }
 
     printf("Presione enter para continuar\n");
@@ -381,7 +381,7 @@ void menuMostrarLista(List *listaGlobal) {
 
     while(c)
     {
-        if (strcmp(nomIngresado,c->numLista))
+        if (!strcmp(nomIngresado,c->numLista))
         {
             listFound = true;
             break;
