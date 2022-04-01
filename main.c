@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "list.h"
+#include "list.c"
 #include <stdbool.h>
 
 typedef struct Cancion {
