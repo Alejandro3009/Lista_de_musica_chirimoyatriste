@@ -324,6 +324,9 @@ void menuEliminarCancion(List *listaGlobal) {
         else{
             cancion = nextList(listaGlobal);
         }
+        printf("No se encontro la cancion\n");
+        printf("Presione Enter para continuar\n");
+        getchar(); getchar();
     }
     return;
 }
