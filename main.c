@@ -18,6 +18,7 @@ typedef struct
     int cantidad;
 }tipoArreglo;
 
+tipoArreglo* aumentarMemoria(tipoArreglo*,int);
 void menuImportar(List*);
 void menuExportar(List*);
 void menuAgregarCancion(List*);
@@ -72,6 +73,13 @@ int main()
         }
     }
     return 0;
+}
+
+tipoArreglo* aumentarMemoria(tipoArreglo* arreglo, int tamano)
+{
+    arreglo = (tipoArreglo*) realloc (arreglo, tamano * sizeof(tipoArreglo));
+    if(arreglo == NULL)return NULL;
+    return arreglo;
 }
 
 void printCancion(Cancion *cancion)
@@ -140,7 +148,7 @@ void menuImportar (List *listaGlobal)
 }
 
 void menuExportar(List *listaGlobal) {
-    char nombreArchivo[64];
+    /*char nombreArchivo[64];
 
     printf("Escriba el nombre del archivo a exportar");
     scanf("%s",&nombreArchivo);
@@ -169,7 +177,7 @@ void menuExportar(List *listaGlobal) {
         fputs("\n", fp);
     }
 
-    return;
+    return;*/
 }
 
 void menuAgregarCancion(List *listaGlobal) {
@@ -321,14 +329,13 @@ void menuEliminarCancion(List *listaGlobal) {
 }
 
 void menuMostrarListas(List *listaGlobal) {
-    tipoArreglo *arreglo;
+    tipoArreglo *arreglo = (tipoArreglo*) malloc (sizeof(tipoArreglo));
     int i;
     int tamano = 0;
-    printf("A");
     Cancion *c = firstList(listaGlobal);
     bool mismoNombre = false;
 
-    while(listaGlobal->current != NULL)
+    while(c != NULL)
     {
         for(i=0; i < tamano; i++)
         {
@@ -342,6 +349,8 @@ void menuMostrarListas(List *listaGlobal) {
         if(mismoNombre)arreglo->cantidad++;
         else
         {
+            tamano++;
+            aumentarMemoria(arreglo,tamano);
             arreglo->nombre = c->numLista;
             arreglo->cantidad = 1;
         }
@@ -352,6 +361,9 @@ void menuMostrarListas(List *listaGlobal) {
         puts(arreglo->nombre);
         printf("%i\n\n",arreglo->cantidad);
     }
+
+    printf("Presione enter para continuar\n");
+    getchar();getchar();
     return;
 }
 
@@ -360,10 +372,11 @@ void menuMostrarLista(List *listaGlobal) {
     Cancion *c;
     bool listFound = false;
 
+    getchar();
     scanf("%s",&nomIngresado);
     c = firstList(listaGlobal);
 
-    while(listaGlobal->current != NULL)
+    while(c != NULL)
     {
         if (strcmp(nomIngresado,c->numLista))
         {
@@ -374,24 +387,30 @@ void menuMostrarLista(List *listaGlobal) {
         c = nextList(listaGlobal);
     }
 
-    if(!listFound)printf("La lista buscada no existe");
+    if(!listFound)
+        printf("La lista buscada no existe");
     else
     {
-        while(listaGlobal->current != NULL)
+        while(c != NULL)
         {
             printCancion(c);
             c = nextList(listaGlobal);
         }
     }
+
+    printf("Presione enter para continuar\n");
+    getchar();getchar();
     return;
 }
 
 void menuMostrarCanciones(List *listaGlobal) {
     Cancion *cancionzasa = firstList(listaGlobal);
-    while (listaGlobal->current != NULL)
+    while (cancionzasa != NULL)
     {
         printCancion(cancionzasa);
         cancionzasa = nextList(listaGlobal);
     }
+    printf("Presione enter para continuar\n");
+    getchar();getchar();
     return;
 }
