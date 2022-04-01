@@ -81,20 +81,11 @@ tipoArreglo* aumentarMemoria(tipoArreglo* arreglo, int tamano)
 void printCancion(Cancion *cancion)
 {
     printf("%s, %s, \"",cancion->nombre,cancion->artista);
-<<<<<<< Updated upstream
-    firstList(cancion->generos);
     char *genero = firstList(cancion->generos);
     while (1){
         printf("%s",genero);
         genero = nextList(cancion->generos);
         if (genero == NULL) break;
-=======
-    char *generos = firstList(cancion->generos);
-    while (1){
-        printf("%s",generos);
-        generos = nextList(cancion->generos);
-        if(generos == NULL)break;
->>>>>>> Stashed changes
         printf(" ");
     }
     printf("\", %s, %s\n", cancion->anno,cancion->numLista);
@@ -364,11 +355,8 @@ void menuMostrarListas(List *listaGlobal) {
             arreglo->nombre = c->numLista;
             arreglo->cantidad = 1;
         }
-<<<<<<< Updated upstream
         c = nextList(listaGlobal);
-=======
         mismoNombre = false;
->>>>>>> Stashed changes
     }
 
     for(i=0; i<tamano; i++)
