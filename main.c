@@ -18,6 +18,7 @@ typedef struct
     int cantidad;
 }tipoArreglo;
 
+tipoArreglo* aumentarMemoria(tipoArreglo*,int);
 void menuImportar(List*);
 void menuExportar(List*);
 void menuAgregarCancion(List*);
@@ -72,6 +73,13 @@ int main()
         }
     }
     return 0;
+}
+
+tipoArreglo* aumentarMemoria(tipoArreglo* arreglo, int tamano)
+{
+    arreglo = (tipoArreglo*) realloc (arreglo, tamano * sizeof(tipoArreglo));
+    if(arreglo == NULL)return NULL;
+    return arreglo;
 }
 
 void printCancion(Cancion *cancion)
@@ -319,15 +327,17 @@ void menuEliminarCancion(List *listaGlobal) {
         else{
             cancion = nextList(listaGlobal);
         }
+        printf("No se encontro la cancion\n");
+        printf("Presione Enter para continuar\n");
+        getchar(); getchar();
     }
     return;
 }
 
 void menuMostrarListas(List *listaGlobal) {
-    tipoArreglo *arreglo;
+    tipoArreglo *arreglo = (tipoArreglo*) malloc (sizeof(tipoArreglo));
     int i;
     int tamano = 0;
-    printf("A");
     Cancion *c = firstList(listaGlobal);
     bool mismoNombre = false;
 
@@ -345,6 +355,8 @@ void menuMostrarListas(List *listaGlobal) {
         if(mismoNombre)arreglo->cantidad++;
         else
         {
+            tamano++;
+            aumentarMemoria(arreglo,tamano);
             arreglo->nombre = c->numLista;
             arreglo->cantidad = 1;
         }
@@ -356,6 +368,9 @@ void menuMostrarListas(List *listaGlobal) {
         puts(arreglo->nombre);
         printf("%i\n\n",arreglo->cantidad);
     }
+
+    printf("Presione enter para continuar\n");
+    getchar();getchar();
     return;
 }
 
@@ -379,7 +394,8 @@ void menuMostrarLista(List *listaGlobal) {
         c = nextList(listaGlobal);
     }
 
-    if(!listFound)printf("La lista buscada no existe");
+    if(!listFound)
+        printf("La lista buscada no existe");
     else
     {
         while(c != NULL)
@@ -388,17 +404,20 @@ void menuMostrarLista(List *listaGlobal) {
             c = nextList(listaGlobal);
         }
     }
+
+    printf("Presione enter para continuar\n");
+    getchar();getchar();
     return;
 }
 
 void menuMostrarCanciones(List *listaGlobal) {
     Cancion *cancionzasa = firstList(listaGlobal);
-    while (cancionzasa)
+    while (cancionzasa != NULL)
     {
         printCancion(cancionzasa);
         cancionzasa = nextList(listaGlobal);
     }
-    printf("Presione Enter para continuar\n");
-    getchar(); getchar();
+    printf("Presione enter para continuar\n");
+    getchar();getchar();
     return;
 }
