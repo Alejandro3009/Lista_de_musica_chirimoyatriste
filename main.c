@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "list.c"
+#include "list.h"
 #include <stdbool.h>
 
 typedef struct Cancion {
@@ -190,7 +190,7 @@ void menuAgregarCancion(List *listaGlobal) {
     Cancion* C = firstList(listaGlobal);
     while (C != NULL)
     {
-        if (strcmp(C->nombre, cancion->nombre))
+        if (strcmp(C->nombre, cancion->nombre) == 0)
         {
             if (strcmp(C->artista, cancion->artista) == 0)
             {
@@ -340,18 +340,18 @@ void menuMostrarListas(List *listaGlobal) {
     {
         for(i=0; i < tamano; i++)
         {
-            if(strcmp(c->numLista,arreglo->nombre))
+            if(strcmp(c->numLista,arreglo->nombre) == 0)
             {
                 mismoNombre = true;
                 break;
             }
         }
 
-        if(mismoNombre)arreglo->cantidad++;
+        if (mismoNombre) arreglo->cantidad++;
         else
         {
             tamano++;
-            aumentarMemoria(arreglo,tamano);
+            arreglo = aumentarMemoria(arreglo,tamano);
             arreglo->nombre = c->numLista;
             arreglo->cantidad = 1;
         }
@@ -381,7 +381,7 @@ void menuMostrarLista(List *listaGlobal) {
 
     while(c)
     {
-        if (strcmp(nomIngresado,c->numLista))
+        if (strcmp(nomIngresado,c->numLista) == 0)
         {
             listFound = true;
             break;
