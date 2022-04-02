@@ -71,6 +71,12 @@ int main()
     return 0;
 }
 
+void esperarEnter()
+{
+    printf("Presione ENTER para continuar\n");
+    getchar();getchar();
+}
+
 tipoArreglo* aumentarMemoria(tipoArreglo* arreglo, int tamano)
 {
     arreglo = (tipoArreglo*) realloc (arreglo, tamano * sizeof(tipoArreglo));
@@ -128,7 +134,7 @@ void menuImportar (List *listaGlobal)
 
     FILE *fp = fopen(nombreArchivo, "r");
     char linea[1024];
-
+    // comprobar que el archivo termine en .csv
     fgets(linea, 1023, fp);
     while (linea)
     {
@@ -138,9 +144,8 @@ void menuImportar (List *listaGlobal)
         if (feof(fp)) break; // termina cuando encuentra un EOF
         fgets(linea, 1023, fp);
     }
-    printf("El archivo %s ha sido importado exitosamente\nPresione Enter para continuar\n", nombreArchivo);
     fclose(fp);
-    getchar(); getchar();
+    esperarEnter();
 }
 
 void menuExportar(List *listaGlobal) {
@@ -175,6 +180,7 @@ void menuExportar(List *listaGlobal) {
         fputs("\n", fp);
     }
     fclose(fp);
+    esperarEnter();
     return;
 }
 
@@ -194,8 +200,8 @@ void menuAgregarCancion(List *listaGlobal) {
         {
             if (strcmp(C->artista, cancion->artista) == 0)
             {
-                printf("La canción ya existe en la lista\nPresione Enter para continuar\n");
-                getchar(); getchar();
+                printf("La canción ya existe en la lista\n");
+                esperarEnter();
                 return;
             }
         }
@@ -203,8 +209,8 @@ void menuAgregarCancion(List *listaGlobal) {
     }
     pushBack(listaGlobal, cancion);
 
-    printf("Canción añadida exitosamente.\nPresione Enter para continuar\n");
-    getchar(); getchar();
+    printf("Canción añadida exitosamente.\n");
+    esperarEnter();
     return;
 }
 
@@ -232,8 +238,7 @@ void menuBuscarPorNombre(List *listaGlobal) {
         printf("No se ha encontrado una cancion con el nombre: %s\n\n", busqueda);
     }
 
-    printf("\nPresione Enter para continuar\n");
-    getchar(); getchar();
+    esperarEnter();
     return;
 
    
@@ -261,8 +266,8 @@ void menuBuscarPorArtista(List *listaGlobal) {
         printf("No se ha encontrado el artista: %s\n",busqueda);
     }
 
-    printf("Fin de búsqueda\nPresione Enter para continuar\n");
-    getchar(); getchar();
+    printf("Fin de búsqueda\n");
+    esperarEnter();
     return;
 }
 
@@ -295,8 +300,7 @@ void menuBuscarPorGenero(List *listaGlobal) {
         printf("No se ha encontrado el genero: %s\n",busqueda);
     }
 
-    printf("Presione Enter para continuar\n");
-    getchar(); getchar();
+    esperarEnter();
 }
 
 void menuEliminarCancion(List *listaGlobal) {
@@ -314,8 +318,7 @@ void menuEliminarCancion(List *listaGlobal) {
     while(cancion != NULL){
         if(strcmp(cancion->nombre,busqueda1) == 0 && strcmp(cancion->artista,busqueda2) == 0){
             printf("Cancion eliminada con exito\n"); 
-            printf("Presione Enter para continuar\n");
-            getchar(); getchar();
+            esperarEnter();
             popCurrent(listaGlobal);
             break;
         }
@@ -323,8 +326,7 @@ void menuEliminarCancion(List *listaGlobal) {
             cancion = nextList(listaGlobal);
         }
         printf("No se encontro la cancion\n");
-        printf("Presione Enter para continuar\n");
-        getchar(); getchar();
+        esperarEnter();
     }
     return;
 }
@@ -340,14 +342,14 @@ void menuMostrarListas(List *listaGlobal) {
     {
         for(i=0; i < tamano; i++)
         {
-            if(strcmp(c->numLista,arreglo->nombre) == 0)
+            if(strcmp(c->numLista,arreglo[i].nombre) == 0)
             {
                 mismoNombre = true;
                 break;
             }
         }
 
-        if (mismoNombre) arreglo->cantidad++;
+        if (mismoNombre) arreglo[i].cantidad++;
         else
         {
             tamano++;
@@ -361,48 +363,39 @@ void menuMostrarListas(List *listaGlobal) {
 
     for(i=0; i<tamano; i++)
     {
-        puts(arreglo[i].nombre);
-        printf("%i\n\n",arreglo[i].cantidad);
+        printf("%s       %i canciones\n", arreglo[i].nombre, arreglo[i].cantidad);
     }
 
-    printf("Presione enter para continuar\n");
-    getchar();getchar();
+    esperarEnter();
     return;
 }
 
 void menuMostrarLista(List *listaGlobal) {
-    char *nomIngresado;
+    char nomIngresado[16];
     Cancion *c;
     bool listFound = false;
 
     getchar();
-    scanf("%s",&nomIngresado);
+    printf("Introduzca el nombre de la lista que desea buscar: ");
+    scanf("%99[^\n]",&nomIngresado);
     c = firstList(listaGlobal);
+    int cont = 0;
 
-    while(c)
+    while(c != NULL)
     {
         if (strcmp(nomIngresado,c->numLista) == 0)
         {
             listFound = true;
-            break;
+            printCancion(c);
+            cont++;
         }
-
         c = nextList(listaGlobal);
     }
 
     if(!listFound)
-        printf("La lista buscada no existe");
-    else
-    {
-        while(c != NULL)
-        {
-            printCancion(c);
-            c = nextList(listaGlobal);
-        }
-    }
+        printf("La lista buscada no existe\n");
 
-    printf("Presione enter para continuar\n");
-    getchar();getchar();
+    esperarEnter();
     return;
 }
 
@@ -413,7 +406,6 @@ void menuMostrarCanciones(List *listaGlobal) {
         printCancion(cancionzasa);
         cancionzasa = nextList(listaGlobal);
     }
-    printf("Presione enter para continuar\n");
-    getchar();getchar();
+    esperarEnter();
     return;
 }
