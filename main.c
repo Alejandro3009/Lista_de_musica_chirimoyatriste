@@ -352,8 +352,8 @@ void menuMostrarListas(List *listaGlobal) {
         {
             tamano++;
             arreglo = aumentarMemoria(arreglo,tamano);
-            arreglo->nombre = c->numLista;
-            arreglo->cantidad = 1;
+            arreglo[tamano-1].nombre = c->numLista;
+            arreglo[tamano-1].cantidad = 1;
         }
         c = nextList(listaGlobal);
         mismoNombre = false;
@@ -361,8 +361,8 @@ void menuMostrarListas(List *listaGlobal) {
 
     for(i=0; i<tamano; i++)
     {
-        puts(arreglo->nombre);
-        printf("%i\n\n",arreglo->cantidad);
+        puts(arreglo[i].nombre);
+        printf("%i\n\n",arreglo[i].cantidad);
     }
 
     printf("Presione enter para continuar\n");
