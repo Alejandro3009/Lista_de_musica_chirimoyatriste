@@ -134,7 +134,14 @@ void menuImportar (List *listaGlobal)
 
     FILE *fp = fopen(nombreArchivo, "r");
     char linea[1024];
-    // comprobar que el archivo termine en .csv
+    char *extension = strrchr(nombreArchivo, '.'); // retorna la posición del ultimo '.'
+    if (strcmp(extension, ".csv") != 0 || !fp)
+    {
+        printf("El archivo introducido no es válido.\n");
+        esperarEnter();
+        return;
+    }
+
     fgets(linea, 1023, fp);
     while (linea)
     {
@@ -145,6 +152,7 @@ void menuImportar (List *listaGlobal)
         fgets(linea, 1023, fp);
     }
     fclose(fp);
+    printf("Archivo importado exitosamente.\n");
     esperarEnter();
 }
 
