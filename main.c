@@ -304,29 +304,33 @@ void menuBuscarPorGenero(List *listaGlobal) {
 }
 
 void menuEliminarCancion(List *listaGlobal) {
-    char busqueda1[64];
-    char busqueda2[64];
+    char nombre[64];
+    char artista[64];
     Cancion* cancion;
 
     
-    printf("Ingrese nombre y artista de la cancion a eliminar: ");
+    printf("Ingrese el nombre de la canción a eliminar: ");
     getchar();
-    scanf("%99[^\n] %99[^\n]",busqueda1,busqueda2);
+    scanf("%99[^\n]", nombre);
+    printf("Ingrese el artista: ");
+    getchar();
+    scanf("%99[^\n]", artista);
 
     cancion = firstList(listaGlobal);
 
     while(cancion != NULL){
-        if(strcmp(cancion->nombre,busqueda1) == 0 && strcmp(cancion->artista,busqueda2) == 0){
+        if(strcmp(cancion->nombre,nombre) == 0 && strcmp(cancion->artista,artista) == 0){
+            popCurrent(listaGlobal);
             printf("Cancion eliminada con exito\n"); 
             esperarEnter();
-            popCurrent(listaGlobal);
             break;
         }
-        else{
-            cancion = nextList(listaGlobal);
+        cancion = nextList(listaGlobal);
+        if (cancion == NULL)
+        {
+            printf("No se encontro la cancion\n");
+            esperarEnter();
         }
-        printf("No se encontro la cancion\n");
-        esperarEnter();
     }
     return;
 }
